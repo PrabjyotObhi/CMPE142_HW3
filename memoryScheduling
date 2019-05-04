@@ -26,7 +26,6 @@ def readFile(file):
 
     return [processID, action, pagesRequired]
 
-'''
 def MemorySwapRand(file):
     pid, action, pages = readFile(file)
     physicalAddress = ["X"] * 20
@@ -104,96 +103,97 @@ def MemorySwapRand(file):
                     swap[physicalAddress[randIndex]] = randIndex
                     physicalAddress[randIndex] = pid[val]
     return[physicalAddress, virtualAddress, swap]
-'''
+    
+def Max (a, b):
+    if a > b:
+        max = a
+    if b > a:
+        max = b
+    if a is b:
+        max = a
+    return max
 
- #Fifo
-pid, action, pages = readFile("memory.dat")
-physicalAddress = ["X"] * 20
-virtualAddress = {}
-physicalAddressIndex = -1
-notFull = False
-random.seed(9001)
-swap = {}
-FIFOIndex = 0
+def MemorySwapFifo(file):
+    
+    pid, action, pages = readFile("memory.dat")
+    physicalAddress = ["X"] * 20
+    virtualAddress = {}
+    physicalAddressIndex = -1
+    notFull = False
+    random.seed(9001)
+    swap = {}
+    FIFOIndex = 0
 
-for val in range(len(pid)):
-    # Determine if the physical address list is full
-    for j in range(len(physicalAddress)):
-        if physicalAddress[j] == "X":
-            notFull = True
-            break
-        else:
-            notFull = False
-
-    # Deal with the 2 actions that are not R,W, or A
-    if action[val] is 'T':
+    for val in range(len(pid)):
+        # Determine if the physical address list is full
         for j in range(len(physicalAddress)):
-            if physicalAddress[j] == pid[val]:
-                physicalAddress[j] = "X"
-                FIFOIndex = j
+            if physicalAddress[j] == "X":
+                notFull = True
+                break
+            else:
+                notFull = False
 
-    if action[val] is 'C':
-        virtualAddress[pid[val]] = val + random.randint(0, 10000)
+        # Deal with the 2 actions that are not R,W, or A
+        if action[val] is 'T':
+            for j in range(len(physicalAddress)):
+                if physicalAddress[j] == pid[val]:
+                    physicalAddress[j] = "X"
+                    FIFOIndex = Max(FIFOIndex, j)
 
-    # If the list is not full, we can go ahead and insert them into the physicalAddresses
+        if action[val] is 'C':
+            virtualAddress[pid[val]] = val + random.randint(0, 10000)
 
-    if notFull:
-        # Determine the type of Action
-        if action[val] is 'A':
-            # Allocates the amount of pages to a pid
-            for i in range(pages[val]):
-                # Modulus to implement the circular aspect of the list
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+        # If the list is not full, we can go ahead and insert them into the physicalAddresses
+
+        if notFull:
+            # Determine the type of Action
+            if action[val] is 'A':
+                # Allocates the amount of pages to a pid
+                for i in range(pages[val]):
+                    # Modulus to implement the circular aspect of the list
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
 
-
-        if action[val] is 'W':
-            for i in range(pages[val]):
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+            if action[val] is 'W':
+                for i in range(pages[val]):
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
 
-        if action[val] is 'R':
-            for i in range(pages[val]):
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+            if action[val] is 'R':
+                for i in range(pages[val]):
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
-    else:
-        if action[val] is 'A':
-            # Allocates the amount of pages to a pid
-            for i in range(pages[val]):
-                # Modulus to implement the circular aspect of the list on a randomIndex
-                # need to implement a swap portion here
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
+        else:
+            if action[val] is 'A':
+                # Allocates the amount of pages to a pid
+                for i in range(pages[val]):
+                    # Modulus to implement the circular aspect of the list on a randomIndex
+                    # need to implement a swap portion here
 
-                FIFOIndex = (FIFOIndex + 1) % 20
-                swap[physicalAddress[FIFOIndex]] = FIFOIndex
-                physicalAddress[FIFOIndex] = pid[val]
+                    FIFOIndex = (FIFOIndex + 1) % 20
+                    swap[physicalAddress[FIFOIndex]] = FIFOIndex
+                    physicalAddress[FIFOIndex] = pid[val]
 
-        if action[val] is 'W':
-            for i in range(pages[val]):
+            if action[val] is 'W':
+                for i in range(pages[val]):
+                    FIFOIndex = (FIFOIndex + 1) % 20
+                    swap[physicalAddress[FIFOIndex]] = FIFOIndex
+                    physicalAddress[FIFOIndex] = pid[val]
 
-                FIFOIndex = (FIFOIndex + 1) % 20
-                swap[physicalAddress[FIFOIndex]] = FIFOIndex
-                physicalAddress[FIFOIndex] = pid[val]
+            if action[val] is 'R':
+                for i in range(pages[val]):
+                    FIFOIndex = (FIFOIndex + 1) % 20
+                    swap[physicalAddress[FIFOIndex]] = FIFOIndex
+                    physicalAddress[FIFOIndex] = pid[val]
+                    
+    return [physicalAddress, virtualAddress, swap]
 
-        if action[val] is 'R':
-            for i in range(pages[val]):
-
-                FIFOIndex = (FIFOIndex + 1) % 20
-                swap[physicalAddress[FIFOIndex]] = FIFOIndex
-                physicalAddress[FIFOIndex] = pid[val]
-
-
-
-print(physicalAddress)
-print(virtualAddress)
-print(physicalAddressIndex)
-print(FIFOIndex)
-print(swap)
 
 '''
 if the action requested by a page is C - assign a virtual address 
