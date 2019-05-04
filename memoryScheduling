@@ -46,6 +46,10 @@ def MemorySwapRand(file):
 
         # Deal with the 2 actions that are not R,W, or A
         if action[val] is 'T':
+            # Deletes pids from the swap tables and virtual address tables
+
+            del swap[pid[val]]
+            del virtualAddress[pid[val]]
             for j in range(len(physicalAddress)):
                 if physicalAddress[j] == pid[val]:
                     physicalAddress[j] = "X"
@@ -103,7 +107,7 @@ def MemorySwapRand(file):
                     swap[physicalAddress[randIndex]] = randIndex
                     physicalAddress[randIndex] = pid[val]
     return[physicalAddress, virtualAddress, swap]
-    
+
 def Max (a, b):
     if a > b:
         max = a
@@ -114,7 +118,7 @@ def Max (a, b):
     return max
 
 def MemorySwapFifo(file):
-    
+
     pid, action, pages = readFile("memory.dat")
     physicalAddress = ["X"] * 20
     virtualAddress = {}
@@ -135,6 +139,9 @@ def MemorySwapFifo(file):
 
         # Deal with the 2 actions that are not R,W, or A
         if action[val] is 'T':
+            # Deletes pids from the swap tables and virtual address tables
+            del swap[pid[val]]
+            del virtualAddress[pid[val]]
             for j in range(len(physicalAddress)):
                 if physicalAddress[j] == pid[val]:
                     physicalAddress[j] = "X"
@@ -191,8 +198,10 @@ def MemorySwapFifo(file):
                     FIFOIndex = (FIFOIndex + 1) % 20
                     swap[physicalAddress[FIFOIndex]] = FIFOIndex
                     physicalAddress[FIFOIndex] = pid[val]
-                    
+
     return [physicalAddress, virtualAddress, swap]
+
+#LRU would start the same way as both of them ie filling up the physical address
 
 
 '''
