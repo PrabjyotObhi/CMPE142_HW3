@@ -44,16 +44,17 @@ for val in range(len(pid)):
         for i in range(pages[val]):
             physicalAddressIndex = (physicalAddressIndex + 1) % 20
             physicalAddress[physicalAddressIndex] = pid[val]
-
     if action[val] is 'R':
         for i in range(pages[val]):
             physicalAddressIndex = (physicalAddressIndex + 1) % 20
             physicalAddress[physicalAddressIndex] = pid[val]
-
     if action[val] is 'T':
-        for i in range(len(physicalAddress)):
-            if physicalAddress[i] is pid[val]:
-                physicalAddress[i] = "Empty"
+        for j in range(len(physicalAddress)):
+            if physicalAddress[j] == pid[val]:
+                physicalAddress[j] = "Empty"
+
+
+
 
 
 
