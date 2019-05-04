@@ -1,0 +1,57 @@
+import random
+def readFile(file):
+    lines = open(file).read().splitlines()
+    string = []
+    processID = []
+    action = []
+    pagesRequired = []
+    for val in range(len(lines)):
+        temp = lines[val].split(' ')
+        string.append(temp)
+
+    for val in range(len(string)):
+        if len(string[val]) is 2:
+            processID.append(int(string[val][0]))
+            action.append(string[val][1])
+            pagesRequired.append(0)
+
+        elif len(string[val]) is 3:
+            processID.append(int(string[val][0]))
+            action.append(string[val][1])
+            pagesRequired.append(int(string[val][2]))
+        else:
+            print("Invalid Data")
+
+    return [processID, action, pagesRequired]
+
+pid, action, pages = readFile("memory.dat")
+print(pid)
+print(action)
+print(pages)
+physicalAddress = ["Empty"] * 20
+virtualAddress = [ ]
+
+
+for val in range(len(pid)):
+    if action[val] is 'C':
+        virtualAddress.append(val + 10)
+    if action[val] is 'A':
+        for i in range(pages[val]):
+            physicalAddress[val] = pid[val]
+    if action[val] is 'W':
+        for i in range(pages[val]):
+            physicalAddress[val] = pid[val]
+    if action[val] is 'R':
+        for i in range(pages[val]):
+            physicalAddress[val] = pid[val]
+    '''
+    if action[val] is 'T':
+       for i in range(len(physicalAddress)):
+           if physicalAddress[i] is pid[val]:
+               physicalAddress[i] = "Empty"
+    '''
+    
+'''
+if the action requested by a page is C - assign a virtual address 
+if the action is A, W, or R-  refer to the pages table to determine how many pages are needed. Give the space if we have it (we currently do)
+'''
