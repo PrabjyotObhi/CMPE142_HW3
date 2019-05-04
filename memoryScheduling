@@ -27,93 +27,88 @@ def readFile(file):
     return [processID, action, pagesRequired]
 
 
-pid, action, pages = readFile("memory.dat")
-print(pid)
-print(action)
-print(pages)
-physicalAddress = ["X"] * 20
-virtualAddress = {}
-physicalAddressIndex = -1
-notFull = False
-random.seed(9001)
-swap = {}
+def MemorySwapRand(file):
+    pid, action, pages = readFile(file)
+    physicalAddress = ["X"] * 20
+    virtualAddress = {}
+    physicalAddressIndex = -1
+    notFull = False
+    random.seed(9001)
+    swap = {}
 
-for val in range(len(pid)):
-    # Determine if the physical address list is full
-    for j in range(len(physicalAddress)):
-        if physicalAddress[j] == "X":
-            notFull = True
-            break
-        else:
-            notFull = False
-
-    # Deal with the 2 actions that are not R,W, or A
-    if action[val] is 'T':
+    for val in range(len(pid)):
+        # Determine if the physical address list is full
         for j in range(len(physicalAddress)):
-            if physicalAddress[j] == pid[val]:
-                physicalAddress[j] = "X"
+            if physicalAddress[j] == "X":
+                notFull = True
+                break
+            else:
+                notFull = False
 
-    if action[val] is 'C':
-        virtualAddress[pid[val]] = val + random.randint(0, 10000)
+        # Deal with the 2 actions that are not R,W, or A
+        if action[val] is 'T':
+            for j in range(len(physicalAddress)):
+                if physicalAddress[j] == pid[val]:
+                    physicalAddress[j] = "X"
 
-    # If the list is not full, we can go ahead and inser them into the physicalAddresses
-    if notFull:
-        # Determine the type of Action
-        if action[val] is 'A':
-            # Allocates the amount of pages to a pid
-            for i in range(pages[val]):
-                # Modulus to implement the circular aspect of the list
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+        if action[val] is 'C':
+            virtualAddress[pid[val]] = val + random.randint(0, 10000)
+
+        # If the list is not full, we can go ahead and inser them into the physicalAddresses
+        if notFull:
+            # Determine the type of Action
+            if action[val] is 'A':
+                # Allocates the amount of pages to a pid
+                for i in range(pages[val]):
+                    # Modulus to implement the circular aspect of the list
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
 
-        if action[val] is 'W':
-            for i in range(pages[val]):
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+            if action[val] is 'W':
+                for i in range(pages[val]):
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
 
-        if action[val] is 'R':
-            for i in range(pages[val]):
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                while physicalAddress[physicalAddressIndex] != "X":
+            if action[val] is 'R':
+                for i in range(pages[val]):
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                physicalAddress[physicalAddressIndex] = pid[val]
-    else:
-        randIndex = random.randint(0, 19)
-        if action[val] is 'A':
-            # Allocates the amount of pages to a pid
-            for i in range(pages[val]):
-                # Modulus to implement the circular aspect of the list on a randomIndex
-                # need to implement a swap portion here
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                randIndex = random.randint(0, 100) % 20
-                swap[physicalAddress[randIndex]] = randIndex
-                physicalAddress[randIndex] = pid[val]
+                    while physicalAddress[physicalAddressIndex] != "X":
+                        physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    physicalAddress[physicalAddressIndex] = pid[val]
+        else:
+            randIndex = random.randint(0, 19)
+            if action[val] is 'A':
+                # Allocates the amount of pages to a pid
+                for i in range(pages[val]):
+                    # Modulus to implement the circular aspect of the list on a randomIndex
+                    # need to implement a swap portion here
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    randIndex = random.randint(0, 100) % 20
+                    swap[physicalAddress[randIndex]] = randIndex
+                    physicalAddress[randIndex] = pid[val]
 
-        if action[val] is 'W':
-            for i in range(pages[val]):
-                # need to implement a swap portion here
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                randIndex = random.randint(0, 100) % 20
-                swap[physicalAddress[randIndex]] = randIndex
-                physicalAddress[randIndex] = pid[val]
+            if action[val] is 'W':
+                for i in range(pages[val]):
+                    # need to implement a swap portion here
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    randIndex = random.randint(0, 100) % 20
+                    swap[physicalAddress[randIndex]] = randIndex
+                    physicalAddress[randIndex] = pid[val]
 
-        if action[val] is 'R':
-            for i in range(pages[val]):
-                # need to implement a swap portion here
-                physicalAddressIndex = (physicalAddressIndex + 1) % 20
-                randIndex = random.randint(0, 100) % 20
-                swap[physicalAddress[randIndex]] = randIndex
-                physicalAddress[randIndex] = pid[val]
+            if action[val] is 'R':
+                for i in range(pages[val]):
+                    # need to implement a swap portion here
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                    randIndex = random.randint(0, 100) % 20
+                    swap[physicalAddress[randIndex]] = randIndex
+                    physicalAddress[randIndex] = pid[val]
+    return[physicalAddress, virtualAddress, swap]
 
-print(physicalAddress)
-print(virtualAddress)
-print(notFull)
-print(swap)
-print(virtualAddress)
+print(MemorySwapRand("memory.dat"))
 '''
 if the action requested by a page is C - assign a virtual address 
 if the action is A, W, or R-  refer to the pages table to determine how many pages are needed. Give the space if we have it (we currently do)
