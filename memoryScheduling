@@ -30,12 +30,12 @@ print(pid)
 print(action)
 print(pages)
 physicalAddress = ["Empty"] * 20
-virtualAddress = [ ]
+virtualAddress = { }
 physicalAddressIndex = -1
 
 for val in range(len(pid)):
     if action[val] is 'C':
-        virtualAddress.append(val + 10)
+        virtualAddress[pid[val]] = val + 10
     if action[val] is 'A':
         for i in range(pages[val]):
             physicalAddressIndex = (physicalAddressIndex + 1) % 20
