@@ -206,10 +206,81 @@ def MemorySwapFifo(file):
 
     return [physicalAddress, virtualAddress, swap]
 
-pAddress, vAddress, swap = MemorySwapRand("memory.dat")
 
-print(pAddress, "\n", vAddress, "\n", swap)
+pid, action, pages = readFile("memory.dat")
+physicalAddress = ["X"] * 20
+virtualAddress = {}
+physicalAddressIndex = -1
+notFull = False
+random.seed(9001)
+swap = {}
+LRUIndex = 0
 
+for val in range(len(pid)):
+    # Determine if the physical address list is full
+    for j in range(len(physicalAddress)):
+        if physicalAddress[j] == "X":
+            notFull = True
+            break
+        else:
+            notFull = False
+
+    # Deal with the 2 actions that are not R,W, or A
+    if action[val] is 'T':
+        # Deletes pids from the virtual address tables,
+        del virtualAddress[pid[val]]
+        # need to check if the pid has a physical address in swap
+        if pid[val] in swap:
+            del swap[pid[val]]
+
+        for j in range(len(physicalAddress)):
+            if physicalAddress[j] == pid[val]:
+                physicalAddress[j] = "X"
+
+    if action[val] is 'C':
+        virtualAddress[pid[val]] = val + random.randint(0, 10000)
+
+    # If the list is not full, we can go ahead and insert them into the physicalAddresses
+
+    if notFull:
+        # Determine the type of Action
+        if action[val] is 'A':
+            # Allocates the amount of pages to a pid
+            for i in range(pages[val]):
+                # Modulus to implement the circular aspect of the list
+                physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                while physicalAddress[physicalAddressIndex] != "X":
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                physicalAddress[physicalAddressIndex] = pid[val]
+
+        if action[val] is 'W':
+            for i in range(pages[val]):
+                physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                while physicalAddress[physicalAddressIndex] != "X":
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                physicalAddress[physicalAddressIndex] = pid[val]
+
+        if action[val] is 'R':
+            for i in range(pages[val]):
+                physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                while physicalAddress[physicalAddressIndex] != "X":
+                    physicalAddressIndex = (physicalAddressIndex + 1) % 20
+                physicalAddress[physicalAddressIndex] = pid[val]
+    else:
+        if action[val] is 'W':
+            for i in range(0, pages[val]):
+                if action[i] is 'A':
+                    physicalAddress[LRUIndex] = pid[val]
+                    LRUIndex = (LRUIndex + 1) % 20
+        if action[val] is 'R':
+            for i in range(0, pages[val]):
+                if action[i] is 'A':
+                    physicalAddress[LRUIndex] = pid[val]
+                    LRUIndex = (LRUIndex + 1) % 20
+
+print(physicalAddress)
+print(swap)
+print(virtualAddress)
 
 '''
 if the action requested by a page is C - assign a virtual address 
