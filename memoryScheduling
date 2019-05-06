@@ -215,6 +215,11 @@ notFull = False
 random.seed(9001)
 swap = {}
 LRUIndex = -1
+count = 0
+yeet = []
+for j in range(len(pid)):
+    if action[j] == 'A':
+        count = count + pages[j]
 
 for val in range(len(pid)):
     # Determine if the physical address list is full
@@ -267,30 +272,36 @@ for val in range(len(pid)):
                     physicalAddressIndex = (physicalAddressIndex + 1) % 20
                 physicalAddress[physicalAddressIndex] = pid[val]
     else:
+
         if action[val] is 'W':
             for i in range(0, len(pid)):
                 if action[i] is 'A':
                     if i is pages[i]:
                         break
-                    for j in range(pages[val]):
-                        LRUIndex = (LRUIndex + 1) % 20
-                        swap[physicalAddress[LRUIndex]] = LRUIndex
-                        physicalAddress[LRUIndex] = pid[val]
+                    else:
+                        for j in range(pages[val]):
+                            yeet.append("gh")
+
         if action[val] is 'R':
             for i in range(0, len(pid)):
                 if action[i] is 'A':
                     if i is pages[i]:
                         break
-                    for j in range(pages[val]):
-                        LRUIndex = (LRUIndex + 1) % 20
-                        swap[physicalAddress[LRUIndex]] = LRUIndex
-                        physicalAddress[LRUIndex] = pid[val]
+                    else:
+                        for j in range(pages[val]):
+                            LRUIndex = (LRUIndex + 1) % 20
+                            swap[physicalAddress[LRUIndex]] = LRUIndex
+                            physicalAddress[LRUIndex] = pid[val]
+                            count = count - 1
+
+print(len(physicalAddress))
 print(pid)
+print(count)
 print(action)
 print(pages)
 print(physicalAddress)
 print(swap)
-
+print(len(yeet))
 
 '''
 if the action requested by a page is C - assign a virtual address 
