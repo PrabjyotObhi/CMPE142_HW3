@@ -280,7 +280,13 @@ for val in range(len(pid)):
                         break
                     else:
                         for j in range(pages[val]):
-                            yeet.append("gh")
+                            LRUIndex = (LRUIndex + 1) % 20
+                            swap[physicalAddress[LRUIndex]] = LRUIndex
+                            physicalAddress[LRUIndex] = pid[val]
+                            count = count - 1
+                else:
+                    print("yeet")
+
 
         if action[val] is 'R':
             for i in range(0, len(pid)):
