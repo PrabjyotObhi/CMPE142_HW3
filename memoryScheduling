@@ -57,7 +57,7 @@ def MemorySwapRand(file):
                     physicalAddress[j] = "X"
 
         if action[val] is 'C':
-            continue;
+            virtualAddress[pid[val]] = val + random.randint(0, 10000);
 
         # If the list is not full, we can go ahead and insert them into the physicalAddresses
         if notFull:
@@ -118,13 +118,9 @@ def MemorySwapRand(file):
         uniquePID.append(x)
         amountforswap.append(y)
 
-    for x, y in virtualAddress.items():
-        print(x, y)
-
-    print(uniquePID)
-    #print pid shit with virtual addresses
     yeet = 0
     rubberband = 0
+    print("\n \n \t \t \tPrinting Map")
     print("ProcessID  Virtual Address  Physical Address")
     for val in pid:
         print(val,  "          ", virtualAddress[val] + yeet,  "            ", rubberband)
@@ -132,18 +128,11 @@ def MemorySwapRand(file):
         rubberband = rubberband + 1
 
     #print swap
+    print("\n \n \tPrinting Swap")
     print("ProcessID  Virtual Address")
     for val in swap:
         print(val, "           ", "S")
 
-
-
-
-
-
-
-
-    return[physicalAddress, virtualAddress, swap]
 
 def Max (a, b):
     if a > b:
@@ -246,6 +235,7 @@ def MemorySwapFifo(file):
         amountforswap.append(y)
     yeet = 0
     rubberband = 0
+    print("\n \n \t \t \tPrinting Map")
     print("ProcessID  Virtual Address  Physical Address")
     for val in pid:
         print(val,  "          ", virtualAddress[val] + yeet,  "            ", rubberband)
@@ -258,41 +248,6 @@ def MemorySwapFifo(file):
     for val in swap:
         print(val, "           ", "S")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    return [physicalAddress, virtualAddress, swap]
 
 def MemorySwapLRU(file):
     pid, action, pages = readFile(file)
@@ -367,6 +322,7 @@ def MemorySwapLRU(file):
         else:
             if action[val] is 'W':
                 if len(indexAfinal)>= 0:
+                    swap[physicalAddress[LRUIndex]] = LRUIndex
                     physicalAddress[indexAfinal[count]] = pid[val]
                     del indexAfinal[count]
                     count = count + 1
@@ -377,6 +333,7 @@ def MemorySwapLRU(file):
 
             if action[val] is 'R':
                  if len(indexAfinal)>= 0:
+                     swap[physicalAddress[LRUIndex]] = LRUIndex
                      physicalAddress[indexAfinal[count]] = pid[val]
                      del indexAfinal[count]
                      count = count + 1
@@ -389,34 +346,63 @@ def MemorySwapLRU(file):
                 LRUIndex = (LRUIndex + 1) % 20
                 swap[physicalAddress[LRUIndex]] = LRUIndex
                 physicalAddress[LRUIndex] = pid[val]
-    return [physicalAddress, virtualAddress, swap]
+    amountforswap = []
+    uniquePID = list(dict.fromkeys(pid))
+    for x,y in swap.items():
+        uniquePID.append(x)
+        amountforswap.append(y)
+    yeet = 0
+    rubberband = 0
+    print("\n \n \t \t \tPrinting Map")
+    print("ProcessID  Virtual Address  Physical Address")
+    for val in pid:
+        print(val,  "          ", virtualAddress[val] + yeet,  "            ", rubberband)
+        yeet = yeet + 1
+        rubberband = rubberband + 1
 
-MemorySwapRand("memory.dat")
-'''''''''
-amountforswap = []
-uniquePID = list(dict.fromkeys(pid))
-vaddressBase = [ ]
+    #print swap
+    print("\n \n \tPrinting Swap")
+    print("ProcessID  Virtual Address")
+    for val in swap:
+        print(val, "           ", "S")
 
-for x,y in swap.items():
-    uniquePID.append(x)
-    amountforswap.append(y)
 
-for x, y in vadress.items():
-    print(x, y)
 
-print(uniquePID)
-#print pid shit with virtual addresses
-yeet = 0
-rubberband = 0
-print("ProcessID  Virtual Address  Physical Address")
-for val in pid:
-    print(val,  "          ", vadress[val] + yeet,  "            ", rubberband)
-    yeet = yeet + 1
-    rubberband = rubberband + 1
 
-#print swap
-print("ProcessID  Virtual Address")
-for val in swap:
-    print(val, "           ", vadress[val])
 
-'''
+
+
+
+
+
+
+
+
+
+MemorySwapLRU("memory.dat")
+
+
+
+def __main__():
+    val = input("Please enter path to your memory.dat file, or use ours:")
+    if val == 'no':
+        jobID, duration, arrivalTime = readFile("final_code/jobs.dat")
+    else:
+        jobID, duration, arrivalTime = readFile(val)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+__main__()
