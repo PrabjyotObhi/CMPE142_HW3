@@ -26,8 +26,8 @@ def readFile(file):
 
     return [processID, action, pagesRequired]
 
-def MemorySwapRand(file):
-    pid, action, pages = readFile(file)
+def MemorySwapRand(jobID, duration, arrivalTime):
+    pid, action, pages = jobID, duration, arrivalTime
     physicalAddress = ["X"] * 20
     virtualAddress = {}
     physicalAddressIndex = -1
@@ -143,9 +143,9 @@ def Max (a, b):
         max = a
     return max
 
-def MemorySwapFifo(file):
+def MemorySwapFifo(jobID, duration, arrivalTime):
 
-    pid, action, pages = readFile(file)
+    pid, action, pages = jobID, duration, arrivalTime
     physicalAddress = ["X"] * 20
     virtualAddress = {}
     physicalAddressIndex = -1
@@ -249,8 +249,8 @@ def MemorySwapFifo(file):
         print(val, "           ", "S")
 
 
-def MemorySwapLRU(file):
-    pid, action, pages = readFile(file)
+def MemorySwapLRU(jobID, duration, arrivalTime):
+    pid, action, pages = jobID, duration, arrivalTime
     physicalAddress = ["X"] * 20
     virtualAddress = {}
     physicalAddressIndex = -1
@@ -371,35 +371,34 @@ def MemorySwapLRU(file):
 
 
 
-
-
-
-
-
-
-
-
-MemorySwapLRU("memory.dat")
-
-
-
 def __main__():
-    val = input("Please enter path to your memory.dat file, or use ours:")
-    if val == 'no':
-        jobID, duration, arrivalTime = readFile("final_code/jobs.dat")
-    else:
-        jobID, duration, arrivalTime = readFile(val)
-    
+    val = ''
+    try:
+        val = input("Please enter 0 to use our memory.dat file. If you would like to use your own file, please enter 1:\n")
+        if val != '0' and val != '1':
+            raise Exception()
+    except:
+        while True:
+            if val == '0' or val == '1':
+                break
+    finally:
+        if val == '0':
+            jobID, duration, arrivalTime = readFile("memory.dat")
+        elif val == '1':
+            fName = input("Enter the path to your file:\n")
+            jobID, duration, arrivalTime = readFile(fName)
+
+
+
     print("Using Random:")
-    MemorySwapRand(val)
-    
-    print("Using FIFO:")  
-    MemorySwapFifo(val)     
-    
+    MemorySwapRand(jobID, duration, arrivalTime)
+
+    print("Using FIFO:")
+    MemorySwapFifo(jobID, duration, arrivalTime)
+
     print("Using LRU:")
-    MemorySwapLRU(val)
-                             
-                            
+    MemorySwapLRU(jobID, duration, arrivalTime)
+
 
 
 
