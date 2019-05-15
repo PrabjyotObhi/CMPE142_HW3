@@ -109,6 +109,40 @@ def MemorySwapRand(file):
                     randIndex = random.randint(0, 100) % 20
                     swap[physicalAddress[randIndex]] = randIndex
                     physicalAddress[randIndex] = pid[val]
+
+    amountforswap = []
+    uniquePID = list(dict.fromkeys(pid))
+
+
+    for x,y in swap.items():
+        uniquePID.append(x)
+        amountforswap.append(y)
+
+    for x, y in virtualAddress.items():
+        print(x, y)
+
+    print(uniquePID)
+    #print pid shit with virtual addresses
+    yeet = 0
+    rubberband = 0
+    print("ProcessID  Virtual Address  Physical Address")
+    for val in pid:
+        print(val,  "          ", virtualAddress[val] + yeet,  "            ", rubberband)
+        yeet = yeet + 1
+        rubberband = rubberband + 1
+
+    #print swap
+    print("ProcessID  Virtual Address")
+    for val in swap:
+        print(val, "           ", "S")
+
+
+
+
+
+
+
+
     return[physicalAddress, virtualAddress, swap]
 
 def Max (a, b):
@@ -129,7 +163,7 @@ def MemorySwapFifo(file):
     notFull = False
     random.seed(9001)
     swap = {}
-    FIFOIndex = 0
+    FIFOIndex = -1
 
     for val in range(len(pid)):
         # Determine if the physical address list is full
@@ -205,6 +239,59 @@ def MemorySwapFifo(file):
                     swap[physicalAddress[FIFOIndex]] = FIFOIndex
                     physicalAddress[FIFOIndex] = pid[val]
 
+    amountforswap = []
+    uniquePID = list(dict.fromkeys(pid))
+    for x,y in swap.items():
+        uniquePID.append(x)
+        amountforswap.append(y)
+    yeet = 0
+    rubberband = 0
+    print("ProcessID  Virtual Address  Physical Address")
+    for val in pid:
+        print(val,  "          ", virtualAddress[val] + yeet,  "            ", rubberband)
+        yeet = yeet + 1
+        rubberband = rubberband + 1
+
+    #print swap
+    print("\n \n \tPrinting Swap")
+    print("ProcessID  Virtual Address")
+    for val in swap:
+        print(val, "           ", "S")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return [physicalAddress, virtualAddress, swap]
 
 def MemorySwapLRU(file):
@@ -215,7 +302,7 @@ def MemorySwapLRU(file):
     notFull = False
     random.seed(9001)
     swap = {}
-    LRUIndex = 0
+    LRUIndex = -1
     count = 0
     IndexA = {" "}
     indexAfinal = [ ]
@@ -304,5 +391,32 @@ def MemorySwapLRU(file):
                 physicalAddress[LRUIndex] = pid[val]
     return [physicalAddress, virtualAddress, swap]
 
-pid, vadress, swap = MemorySwapFifo("memory.dat")
+MemorySwapRand("memory.dat")
+'''''''''
+amountforswap = []
+uniquePID = list(dict.fromkeys(pid))
+vaddressBase = [ ]
 
+for x,y in swap.items():
+    uniquePID.append(x)
+    amountforswap.append(y)
+
+for x, y in vadress.items():
+    print(x, y)
+
+print(uniquePID)
+#print pid shit with virtual addresses
+yeet = 0
+rubberband = 0
+print("ProcessID  Virtual Address  Physical Address")
+for val in pid:
+    print(val,  "          ", vadress[val] + yeet,  "            ", rubberband)
+    yeet = yeet + 1
+    rubberband = rubberband + 1
+
+#print swap
+print("ProcessID  Virtual Address")
+for val in swap:
+    print(val, "           ", vadress[val])
+
+'''
