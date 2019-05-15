@@ -390,11 +390,16 @@ def __main__():
     else:
         jobID, duration, arrivalTime = readFile(val)
     
-
-
-
-
-
+    print("Using Random:")
+    MemorySwapRand(val)
+    
+    print("Using FIFO:")  
+    MemorySwapFifo(val)     
+    
+    print("Using LRU:")
+    MemorySwapLRU(val)
+                             
+                            
 
 
 
